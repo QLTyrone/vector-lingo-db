@@ -128,6 +128,12 @@ def DB_StringType : DB_Type<"String","string"> {
     }];
 }
 
+def DB_VectorType : DB_Type<"Vector", "vector"> {
+    let summary = "vector type with different length";
+    let parameters = (ins "int":$len);
+    let assemblyFormat = "`<` $len `>`";
+}
+
 def AnyBool: AnyTypeOf<[I1,NullableType]>;
 def NullableDBType: AnyTypeOf<[AnyType,NullableType]>;
 
@@ -275,6 +281,8 @@ def DB_ModOp : DB_BinaryOp<"mod"> {
     }
   }];
 }
+
+def DB_L2DistanceOp : DB_BinaryOp<"l2_distance">;
 
 class DB_LogicalOp<string mnemonic, list<Trait> traits = []> :
         Op<DB_Dialect, mnemonic,
