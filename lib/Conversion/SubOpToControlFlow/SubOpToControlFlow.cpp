@@ -44,6 +44,8 @@
 #include "runtime-defs/TableBuilder.h"
 #include "runtime-defs/ThreadLocal.h"
 
+#include <iostream>
+
 using namespace mlir;
 
 namespace {
@@ -2630,7 +2632,7 @@ namespace {
    class LookupHnswIndexedViewLowering : public SubOpTupleStreamConsumerConversionPattern<mlir::subop::LookupOp> {
    public:
       using SubOpTupleStreamConsumerConversionPattern<mlir::subop::LookupOp>::SubOpTupleStreamConsumerConversionPattern;
-      LogicalResult matchAndRewrite(mlir::subop::LookupOp lookupOp, OpAdaptor adaptor, SubOpRewriter& rewriter) const override {
+      LogicalResult matchAndRewrite(mlir::subop::LookupOp lookupOp, OpAdaptor adaptor, SubOpRewriter& rewriter, ColumnMapping& mapping) const override {
          if (!lookupOp.getState().getType().isa<mlir::subop::HnswIndexedViewType>()) return failure();
          auto loc = lookupOp->getLoc();
          auto* context = getContext();
@@ -2644,6 +2646,7 @@ namespace {
          auto unpacked = rewriter.create<mlir::util::UnPackOp>(loc, loaded);
          // todo: 2 use index to lookup
          // todo: 3 replace
+         return mlir::success();
       }
    };
 
@@ -3896,9 +3899,11 @@ namespace {
       LogicalResult matchAndRewrite(mlir::subop::CreateHnswIndexedView createOp, OpAdaptor adaptor, SubOpRewriter& rewriter) const override {
          auto bufferType = createOp.getSource().getType().dyn_cast<mlir::subop::BufferType>();
          if (!bufferType) return failure();
+         std::cout << "test";
          // TODO: (hnsw) add other failcheck
          // TODO: (hnsw) build
-         auto hnswView = rt::HnswIndexedView::build()
+         // auto hnswView = rt::HnswIndexedView::build()
+         return success();
       }
    };
    class GetBeginLowering : public SubOpTupleStreamConsumerConversionPattern<mlir::subop::GetBeginReferenceOp> {

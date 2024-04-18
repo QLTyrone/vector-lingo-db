@@ -177,6 +177,11 @@ def HashIndexedView : SubOperator_Type<"HashIndexedView", "hash_indexed_view", [
 }
 def HnswIndexedView : SubOperator_Type<"HnswIndexedView", "hnsw_indexed_view", [State,LookupAbleState]> {
     let summary = "vector hnsw indexed view type";
+    let parameters = (ins "StateMembersAttr":$keyMembers,"StateMembersAttr":$valueMembers );
+    let assemblyFormat = "`<` custom<StateMembers>($keyMembers) `,` custom<StateMembers>($valueMembers) `>`";
+    let extraClassDeclaration = [{
+        StateMembersAttr getMembers();
+    }];
     // todo: set parameters and assemblyFromat basing on hnsw design
 }
 
@@ -603,7 +608,9 @@ def CreateSegmentTreeView : SubOperator_Op<"create_segment_tree_view",[SubOperat
 def CreateHnswIndexedView : SubOperator_Op<"create_hnsw_indexed_view", [SubOperator]> {
     // todo: set arguments and other properties
     // the arguments include hyperparameters and vector data
+    let arguments = (ins AnyType:$source);
     let results = (outs HnswIndexedView:$result);
+    
 }
 //todo: add subop.create_view
 
